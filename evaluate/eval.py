@@ -1,5 +1,8 @@
-import torch.utils.data
+import sys
 import os
+
+sys.path.append('.')
+import torch.utils.data
 import evaluate.config_eval as config
 import data.coco_dataset as coco_dataset
 import network.mobile_yolo as mobile_yolo

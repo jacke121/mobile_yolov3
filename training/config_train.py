@@ -1,10 +1,10 @@
 from tensorboardX import SummaryWriter
 
 # log
-writer = SummaryWriter('../log')
+writer = SummaryWriter('log')
 
 # backbone
-backbone_pretrained = "../weights/mobilenetv2_weights.pth"
+backbone_pretrained = "weights/mobilenetv2_weights.pth"
 
 # checkpoints
 start_epoch = 0

@@ -1,4 +1,7 @@
 import os
+import sys
+
+sys.path.append('.')
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -86,7 +89,7 @@ def detect():
                     pre_h, pre_w = config.img_h, config.img_w
                     box_h = ((y2 - y1) / pre_h) * ori_h
                     box_w = ((x2 - x1) / pre_w) * ori_w
-                    y1 = (y1 /  pre_h) * ori_h
+                    y1 = (y1 / pre_h) * ori_h
                     x1 = (x1 / pre_w) * ori_w
                     # Create a Rectangle patch
                     bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=2, edgecolor=color, facecolor='none')

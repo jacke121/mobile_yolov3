@@ -16,5 +16,5 @@ classes_names_path = "/home/wxrui/DATA/coco/coco.names"
 
 # checkpoint
 backbone_pretrained = ''
-# checkpoint = '../training/output/model138922.pth'
-checkpoint = '../weights/18_46.pth'
+# checkpoint = 'training/output/model138922.pth'
+checkpoint = 'weights/18_46.pth'
