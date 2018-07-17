@@ -14,4 +14,4 @@ device_ids = [0, 1, 2, 3]
 
 # checkpoint
 backbone_pretrained = ''
-checkpoint = 'training/output/model1000.pth'
+checkpoint = 'output/model1000.pth'
