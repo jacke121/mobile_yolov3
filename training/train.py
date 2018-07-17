@@ -25,7 +25,10 @@ def train():
     if config.checkpoint:
         print('lodding checkpoint:', config.checkpoint)
         checkpoint = torch.load(config.checkpoint)
-        net.load_state_dict(checkpoint)
+        pre_dict = {k: v for k, v in checkpoint.items() if '_adj' not in k}
+        model_dict = net.state_dict()
+        model_dict.update(pre_dict)
+        net.load_state_dict(model_dict)
 
     yolo_losses = []
     for i in range(3):

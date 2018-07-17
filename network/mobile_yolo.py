@@ -11,16 +11,25 @@ class Mobile_YOLO(nn.Module):
         self.backbone = mobilenet.mobilenetv2(config.backbone_pretrained)
         _out_filters = self.backbone.layers_out_filters
         #  embedding0
-        self.embedding0_adj = nn.Conv2d(_out_filters[-1], 1024, kernel_size=1)
+        self.embedding0_adj = nn.Sequential(
+            nn.Conv2d(_out_filters[-1], 1024, kernel_size=1, bias=False),
+            nn.BatchNorm2d(1024),
+        )
         final_out_filter0 = len(config.anchors[0]) * (5 + config.classes_num)
         self.embedding0 = self._make_embedding(1024, 256, final_out_filter0)  # 1024 256 255
         #  embedding1
-        self.embedding1_adj = nn.Conv2d(_out_filters[-2], 256, kernel_size=1)
+        self.embedding1_adj = nn.Sequential(
+            nn.Conv2d(_out_filters[-2], 256, kernel_size=1, bias=False),
+            nn.BatchNorm2d(256),
+        )
         self.embedding1_upsample = nn.Upsample(scale_factor=2, mode='nearest')
         final_out_filter1 = len(config.anchors[1]) * (5 + config.classes_num)
         self.embedding1 = self._make_embedding(512, 128, final_out_filter1)
         #  embedding2
-        self.embedding2_adj = nn.Conv2d(_out_filters[-3], 128, kernel_size=1)
+        self.embedding2_adj = nn.Sequential(
+            nn.Conv2d(_out_filters[-3], 128, kernel_size=1, bias=False),
+            nn.BatchNorm2d(128)
+        )
         self.embedding2_upsample = nn.Upsample(scale_factor=2, mode='nearest')
         final_out_filter2 = len(config.anchors[2]) * (5 + config.classes_num)
         self.embedding2 = self._make_embedding(256, 64, final_out_filter2)
