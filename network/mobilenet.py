@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from torch.nn import init
 from collections import OrderedDict
 
@@ -88,7 +87,7 @@ class MobileNet2(nn.Module):
 
         self.num_of_channels = [32, 16, 24, 32, 64, 96, 160, 320]
         assert (input_size % 32 == 0)
-        self.layers_out_filters = [32, 96, 1280]
+        self.layers_out_filters = [192, 576, 1280]
 
         self.c = [_make_divisible(ch * self.scale, 8) for ch in self.num_of_channels]
         self.n = [1, 1, 2, 3, 4, 3, 3, 1]
@@ -154,17 +153,22 @@ class MobileNet2(nn.Module):
         return nn.Sequential(modules)
 
     def forward(self, x):
-        bottleout = []
+        output = []
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.activation(x)
-        for module in self.bottlenecks:
+        for i, module in enumerate(self.bottlenecks):
+            if i == 3 or i == 5:
+                branch = torch.nn.Sequential(
+                    list(module[0].named_children())[0][1],
+                    list(module[0].named_children())[1][1]
+                )
+                output.append(branch(x))
             x = module(x)
-            bottleout.append(x)
         x = self.conv_last(x)
         x = self.bn_last(x)
         x = self.activation(x)
-        return bottleout[2], bottleout[4], x
+        return output[0], output[1], x
 
 
 def mobilenetv2(pretrained, **kwargs):
@@ -178,7 +182,7 @@ def mobilenetv2(pretrained, **kwargs):
 
 
 if __name__ == "__main__":
-    model = mobilenetv2('/home/wxrui/YOLOv3_PyTorch/weights/mobilenetv2_weights.pth')
+    model = mobilenetv2('weights/mobilenetv2_weights.pth')
     x = torch.rand(1, 3, 416, 416)
     out3, out4, out5 = model(x)
     print(out3.size())
